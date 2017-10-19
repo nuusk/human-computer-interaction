@@ -1,0 +1,28 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[OT4]{polski}
+
+
+\author{Piotr Ptak}
+\date{18.10.2017}
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\begin{document}
+\title{Sprawozdanie 1\\Komunikacja człowiek-komputer\\Python i wizualizacja}
+\maketitle
+
+
+\section{Wstęp}
+Zadanie to polegało na wykorzystaniu potencjału biblioteki matplotlib do wizualizacji danych pochodzących z eksperymentów ewolucyjnych. Program przyjmuje odpowiednio przygotowane pliki (w formacie csv), w których zawarte są informacje z 32 powtórzeń danego algorytmu genetycznego. Jako czas przyjmuje się pokolenia (1 kolumna) oraz rozegrane gry (2 kolumna).
+
+\section{Kod}
+Podczas pisania programu starałem się czytelnie dodawać komentarze tak, aby jego analiza była prosta i jednoznaczna. Pomimo realizowania przedmiotu w języku polskim, posiadam konwencję pisania komentarzy w programach w języku angielskim.  Mój kod można umownie rozbić na cztery kategorie: pobranie inputu, przetworzenie inputu i inizjalizacja potrzebnych danych, stworzenie i modyfikacja pierwszego wykresu (lewa strona) oraz stworzenie i modyfikacja drugiego wykresu - pudełkowego (prawa strona). Dane z plików zostały przetworzone za pomocą specjalnie przygotowanych funkcji getXValues, getYValues oraz getBoxValues, które również opisałem w pliku źródłowym.
+
+\section{Wnioski}
+Z racji, że tak naprawdę był to mój pierwszy pełnoprawny program w Pythonie, miałem trochę kłopotów z jego napisaniem. Pewnym problemem na samym początku było przyzwyczajenie się do semantyki tego języka, która wydawała mi się niezgrabna. Muszę jednak przyznać, że szybko się przyzwyczaiłem, choć być może było to spowodowane wcześniejszym kontaktem z podobną konwencją wcięć w Sass oraz Jade.\\Po spędzeniu kilku godzin z Pythonem coraz bardziej zacząłem dostrzegać jego zalety, i choć zapewne nie wykorzystałem większości z nich, z chęcią zagłębię się w ten język przy kolejnych projektach, realizowanych zarówno na zajęciach jak i osobiście.
+
+\end{document}

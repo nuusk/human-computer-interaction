@@ -45,12 +45,26 @@ def hsv2rgb(h, s, v):
     return (h, s, v)
 
 def gradient_rgb_bw(v):
-    #TODO
-    return (0, 0, 0)
+    return (v, v, v)
 
 def gradient_rgb_gbr(v):
-    #TODO
-    return (1, 1, 1)
+    g=0
+    """
+    r=0
+    g=0
+    if (v < 0.5):
+        g = (1-v*2)
+    b = 0.5
+    if (v > 0.5):
+        r = v*0.2
+        g
+    """
+    if (v < 0.5):
+        g = 1 - v*2
+    r = v * 0.5
+    b = 0.5
+
+    return (r, g, b)
 
 def gradient_rgb_gbr_full(v):
     #TODO
@@ -79,7 +93,6 @@ def gradient_hsv_custom(v):
 if __name__ == '__main__':
     def toname(g):
         return g.__name__.replace('gradient_', '').replace('_', '-').upper()
-
     gradients = (gradient_rgb_bw, gradient_rgb_gbr, gradient_rgb_gbr_full, gradient_rgb_wb_custom,
                  gradient_hsv_bw, gradient_hsv_gbr, gradient_hsv_unknown, gradient_hsv_custom)
 

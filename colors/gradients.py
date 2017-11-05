@@ -1,3 +1,11 @@
+#   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
+#   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
+#            PYTHON COLORS EXERCISE          #
+#   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
+#         author: Piotr Ptak (poe)           #
+#   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
+#   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import division             # Division in Python 2.7
@@ -68,7 +76,7 @@ def gradient_rgb_gbr(v):
 
 def gradient_rgb_gbr_full(v):
     #TODO
-    return (0, 0, 0)
+    return (1, 1, 1)
 
 def gradient_rgb_wb_custom(v):
     #TODO

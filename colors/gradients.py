@@ -1,4 +1,4 @@
-#   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
+    #   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
 #   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
 #            PYTHON COLORS EXERCISE          #
 #   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
@@ -52,35 +52,101 @@ def hsv2rgb(h, s, v):
     #TODO
     return (h, s, v)
 
+#~~~~~~~~~~~~~~~~~~
+#black -(1)-> white
+#just pass the value to each of the values r, g, b
 def gradient_rgb_bw(v):
     return (v, v, v)
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#green -(1)-> blue -(2)-> red (shortest path)
+#the road consists of two parts:
+# (1):
+# ~ increase blue value
+# ~ decrease green value
+# (2):
+# ~ incraese red value
+# ~ decrease blue value
 def gradient_rgb_gbr(v):
     g=0
-    """
     r=0
-    g=0
-    if (v < 0.5):
-        g = (1-v*2)
-    b = 0.5
-    if (v > 0.5):
-        r = v*0.2
-        g
-    """
-    if (v < 0.5):
-        g = 1 - v*2
-    r = v * 0.5
-    b = 0.5
+    b=0
+    if v <= 0.5:            #(1)
+        g = max(1 - v*2, 0)
+        b = v*2
+    elif v > 0.5:           #(2)
+        r = max(v*2 - 1, 0)
+        b = 2 - v*2
 
     return (r, g, b)
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#green -(1)-> cyan -(2)-> blue -(3)-> magenta -(4)-> red
+#the road consists of four parts:
+# (1):
+# ~ increase blue value
+# (2):
+# ~ decrease green value
+# (3):
+# ~ increase red value
+# (4):
+# ~ decrease blue value
 def gradient_rgb_gbr_full(v):
-    #TODO
-    return (1, 1, 1)
+    g=0
+    r=0
+    b=0
+    if v <= 0.25:               #(1)
+        g = 1
+        b = v*4
+    elif v <= 0.5:              #(2)
+        b = 1
+        g = max(2 - v*4, 0)
+    elif v <= 0.75:             #(3)
+        b = 1
+        r = max(v*4 - 2, 0)
+    else:                       #(4)
+        r = 1
+        b = max(4 - 4*v, 0)
 
+    return (r, g, b)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#custom road from white to black (with all colors inbetween)
+#white -(1)-> cyan -(2)-> blue -(3)-> magenta -(4)-> red -(5)-> yellow -(6)-> green -(7)-> black
+#the road consists of seven parts. The idea is the same as in previous function (except we have more roads to complete now)
 def gradient_rgb_wb_custom(v):
-    #TODO
-    return (0, 0, 0)
+    g=0
+    r=0
+    b=0
+    if v <= 1/7:                #(1)
+        r = max(1 - v*7, 0)
+        g = 1
+        b = 1
+    elif v <= 2/7:              #(2)
+        r = 0
+        g = max(2 - v*7, 0)
+        b = 1
+    elif v <= 3/7:              #(3)
+        r = max(-2 + v*7, 0)
+        g = 0
+        b = 1
+    elif v <= 4/7:              #(4)
+        r = 1
+        g = 0
+        b = max(4 - v*7, 0)
+    elif v <= 5/7:              #(5)
+        r = 1
+        g = max(-4 + v*7, 0)
+        b = 0
+    elif v <= 6/7:              #(6)
+        r = max(6 - v*7, 0)
+        g = 1
+        b = 0
+    else:                       #(7)
+        r = 0
+        g = max(7 - v*7, 0)
+        b = 0
+    return (r, g, b)
 
 def gradient_hsv_bw(v):
     #TODO

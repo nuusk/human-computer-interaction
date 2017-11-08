@@ -31,24 +31,20 @@ def colorMap(mapData, colorData):
             #print(_map[i][j])
             #print(mapData[i][j])
             try:
-                if float(mapData[i][j]) < 60:
-                    colorData[i][j][0] = 0.7
-                    colorData[i][j][1] = 0.5
-                    colorData[i][j][2] = 0
-                else:
-                    colorData[i][j] = 0
-            except:
-                print(mapData[i][j])
+                colorData[i][j] = grd.gradient_rgb_gbr(min(100, float(mapData[i][j]))/100)
+            except Exception as exc:
+                print(exc)
+                exit()
 
     return colorData
 
 if __name__ == '__main__':
-    _map, _height, _width, _distance = loadCoordinates("big.dem")
+    _map, _height, _width, _distance = loadCoordinates("mapData.dem")
     _color = np.zeros((_height, _width, 3), dtype=np.float32)
     _color = colorMap(_map, _color)
     tmp = np.zeros((5, 3, 3), dtype=np.float32)
     tmp[0][2][0] = 1
-    drawMap(tmp, "map")
+    drawMap(_color, "map")
     #mapaVector = vectorShading(mapa, mapHeight, mapWidth, distance)
     #drawMap(mapaVector,"vectorMap.pdf")
     plt.close()

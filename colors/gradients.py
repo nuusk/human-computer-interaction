@@ -221,8 +221,12 @@ def gradient_hsv_unknown(v):
 def gradient_hsv_custom(v):
     #just having fun
 
-    #this gradient is defined by a sinusoidal function of current microseconds. an interesting effect
+    #this gradient is defined by a tangens of current microseconds. an interesting effect
     return hsv2rgb(math.tan((dt.datetime.now().microsecond/2000))*360, 0.7, 0.9)
+
+    #second interesting example
+    #sinusoidal function
+    #return hsv2rgb(math.sin(math.fabs(dt.datetime.now().microsecond/2000))*360, 1, 1)
 
 if __name__ == '__main__':
     def toname(g):

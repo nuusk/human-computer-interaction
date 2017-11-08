@@ -1,4 +1,4 @@
-    #   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
+#   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
 #   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
 #            PYTHON COLORS EXERCISE          #
 #   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
@@ -9,10 +9,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import division             # Division in Python 2.7
+import math
 import matplotlib
 matplotlib.use('Agg')                       # So that we can render files without GUI
 import matplotlib.pyplot as plt
 from matplotlib import rc
+import datetime as dt
 import numpy as np
 
 from matplotlib import colors
@@ -47,10 +49,6 @@ def plot_color_gradients(gradients, names):
         fig.text(x_text, y_text, name, va='center', ha='left', fontsize=10)
 
     fig.savefig('my-gradients.pdf')
-
-def hsv2rgb(h, s, v):
-    #TODO
-    return (h, s, v)
 
 #~~~~~~~~~~~~~~~~~~
 #black -(1)-> white
@@ -148,21 +146,83 @@ def gradient_rgb_wb_custom(v):
         b = 0
     return (r, g, b)
 
+def hsv2rgb(h, s, v):
+    #we want h to be 0<=h<=360
+    while h > 360:
+        h -= 360
+    while h < 0:
+        h += 360
+    hue = h/60
+    c = v * s
+    x = c * (1 - abs((hue % 2) -1))
+    m = v - c
+
+    #r, g, b is assigned according to the part of the circle H is in
+    if h < 60:
+        rTmp = c
+        gTmp = x
+        bTmp = 0
+    elif h < 120:
+        rTmp = x
+        gTmp = c
+        bTmp = 0
+    elif h < 180:
+        rTmp = 0
+        gTmp = c
+        bTmp = x
+    elif h < 240:
+        rTmp = 0
+        gTmp = x
+        bTmp = c
+    elif h < 300:
+        rTmp = x
+        gTmp = 0
+        bTmp = c
+    else:
+        rTmp = c
+        gTmp = 0
+        bTmp = x
+
+    r = (rTmp + m)
+    g = (gTmp + m)
+    b = (bTmp + m)
+
+    return (r, g, b)
+
+#~~~~~~~~~~~~~~~~~~~~~
+#hsv black to white
 def gradient_hsv_bw(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    #hue doesn't matter. I'm passing number 44 because "a imię jego czterdzieści i cztery"
+    #saturation is equal to 0, so we get a color between black and white
+    #value defines the lightness of the color
+    return hsv2rgb(44, 0, v)
 
+#~~~~~~~~~~~~~~~~~~~~~~
+#hsv green -> blue -> red
 def gradient_hsv_gbr(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    #this is just one function. saturation and value stay at 100% all the time
+    #green is represented by hue 120', blue ~ 240', red ~ 360' (and 0' of course).
+    return hsv2rgb(v*240 + 120, 1, 1)
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~
+#colors are picked from the image using photoshop color picker
+#this is what I found:
+#       1  ->  2   ->  3
+# H   120     60       0
+# S   50%    50%     50%
+# V  100%   100%    100%
 def gradient_hsv_unknown(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    #just one linear function
+    return hsv2rgb(120 - v*120, 0.5, 1)
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~
+#hsv custom gradient
+#just create something creative
 def gradient_hsv_custom(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    #just having fun
+
+    #this gradient is defined by a sinusoidal function of current microseconds. an interesting effect
+    return hsv2rgb(math.tan((dt.datetime.now().microsecond/2000))*360, 0.7, 0.9)
 
 if __name__ == '__main__':
     def toname(g):

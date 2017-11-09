@@ -9,9 +9,9 @@ import numpy as np
 import math
 
 #drawing map using an array of colors. each point has r,g,b values
-def drawMap(_colorMap, fileName):
+def drawMap(colorMap, fileName):
     fig = plt.figure()
-    plt.imshow(_colorMap)
+    plt.imshow(colorMap)
     plt.show()
     fig.savefig(fileName + ".pdf")
 
@@ -34,12 +34,38 @@ def colorMap(mapData, colorData, PEAK, PIT):
     for i in range (0, len(mapData)):
         for j in range(0, len(mapData[i])):
             try:
-                colorData[i][j] = grd.gradient_rgb_bw((float(mapData[i][j])-PIT)/(PEAK-PIT))
+                colorData[i][j] = grd.gradient_hsv_unknown((float(mapData[i][j])-PIT)/(PEAK-PIT))
             except Exception as exc:
                 print(exc)
                 exit()
 
     return colorData
+
+#add light value to the pixel, but keep it between 0 and 1
+def applyLight(pixel, light):
+    pixel += light
+    pixel[0] = max(0, min(pixel[0], 1))
+    pixel[1] = max(0, min(pixel[1], 1))
+    pixel[2] = max(0, min(pixel[2], 1))
+
+    return pixel
+
+#change the value of a pixel depending of a value of a pixel next to it
+def primitiveLight(colorMap, mapData):
+    #lightValue will be added to the higher pixel, and reduced from lower pixel
+    lightValue = 0.12
+    for i in range (1, len(mapData)):
+        for j in range(1, len(mapData[i])):
+            try:
+                if float(mapData[i][j-1]) < float(mapData[i][j]):
+                    colorMap[i][j] = applyLight(colorMap[i][j], lightValue)
+                else:
+                    colorMap[i][j] = applyLight(colorMap[i][j], -lightValue)
+            except Exception as exc:
+                print(exc)
+                exit()
+    return colorMap
+
 
 #use this function to get the highest(peak) and the lowest(pit) point on the map
 #the highest point will determine 100% value of gradient that is used to color the map
@@ -63,5 +89,6 @@ if __name__ == '__main__':
     PEAK, PIT = getExtremes(_map)
     _color = np.zeros((_height, _width, 3), dtype=np.float32)
     _color = colorMap(_map, _color, PEAK, PIT)
+    _color = primitiveLight(_color, _map)
     drawMap(_color, "map")
     plt.close()

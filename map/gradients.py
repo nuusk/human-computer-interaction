@@ -54,4 +54,4 @@ def hsv2rgb(h, s, v):
 
 def gradient_hsv_physical_map(v):
     #just one linear function
-    return hsv2rgb(120 - v*120, 1, 1)
+    return (120 - v*120, 0.7, 0.7)

@@ -1,3 +1,11 @@
+#   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
+#   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
+#             PYTHON MAP EXERCISE            #
+#   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
+#         author: Piotr Ptak (poe)           #
+#   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    #
+#   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   #
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import gradients as grd
@@ -34,7 +42,7 @@ def colorMap(mapData, colorData, PEAK, PIT):
     for i in range (0, len(mapData)):
         for j in range(0, len(mapData[i])):
             try:
-                colorData[i][j] = grd.gradient_hsv_unknown((float(mapData[i][j])-PIT)/(PEAK-PIT))
+                colorData[i][j] = grd.gradient_hsv_physical_map((float(mapData[i][j])-PIT)/(PEAK-PIT))
             except Exception as exc:
                 print(exc)
                 exit()

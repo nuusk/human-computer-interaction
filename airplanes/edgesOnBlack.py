@@ -1,4 +1,4 @@
-from skimage import data
+from skimage import filters,data,color,measure,exposure
 import skimage.io
 from skimage.morphology import disk
 from skimage.filters.rank import median
@@ -9,12 +9,20 @@ from matplotlib import pyplot as plt
 import numpy as np
 import cv2
 import os
-
-
+from random import choice as rcg
 
 #root directory of the project
 projectDirectory = os.getcwd()
 #"/Users/poe/Code/human-computer-interaction/airplanes/"
+
+#cool selection of colors ( ͡° ͜ʖ ͡°)
+myColors = ["#e25724", "#ffd149", "#ffff49", "#a4ff49", "#59bf3d", "#33cea2", "#40cce5", "#37a0fc", "#4655d6", "#825ff4", "#e539bd", "#fc1964"]
+
+qthPercentile = 4
+contourLevelValue = 0.13
+contourWidth = 1.8
+airplanes = []
+contours = []
 
 #get the images and store them in an array
 def collectImages(baseName, lastNumber):
@@ -26,61 +34,39 @@ def collectImages(baseName, lastNumber):
             images.append(cv2.imread(projectDirectory + "/img/" + baseName+ str(i) + ".jpg"))
     return images
 
-#function for finding optimal value of paramaters for bilateral filter
-def tryBilateral(image, numberOfIterations, jump):
-    fig = plt.figure()
-    for i in range(0, numberOfIterations, jump):
-        plt.imshow(cv2.bilateralFilter(image, 9, i, i))
-        fig.savefig(str(i) + ".pdf")
 
-#function for finding optimal value of paramaters for canny edge detector
-def tryCanny(image, numberOfIterations, jump):
+def drawPictureWithContour(image, x):
     fig = plt.figure()
-    for i in range(0, numberOfIterations, jump):
-        plt.imshow(cv2.Canny(image, i, i))
-        fig.savefig(str(i) + ".pdf")
+    #rescale exposure
+    perc = np.percentile(image, qthPercentile)
+    resc = exposure.rescale_intensity(image,in_range=(0, perc))
 
-#function for finding optimal value of paramaters for erosion
-def tryErode(image, numberOfIterations, jump):
-    fig = plt.figure()
-    kernel = np.ones((4, 4), np.uint8)
-    for i in range(0, numberOfIterations, jump):
-        plt.imshow(cv2.erode(image, kernel, iterations=i))
-        fig.savefig(str(i) + ".pdf")
+    img = color.rgb2hsv(resc)
+    height, width, channels = img.shape
+    #print("width: " + str(width))
+    #print("height: " + str(height))
+    #print("channels: " + str(channels))
+    inv = np.zeros([height, width])
+    for i in range(height):
+        for j in range(width):
+            inv[i][j] = 1 - img[i][j][2]
+    contours = measure.find_contours(inv, contourLevelValue)
+    for n, contours in enumerate(contours):
+        plt.plot(contours[:,1],contours[:,0],linewidth=contourWidth, color=rcg(myColors))
 
-#function for finding optimal value of paramaters for bilateral dilatation
-def tryDilate(image, numberOfIterations, jump):
-    fig = plt.figure()
-    kernel = np.ones((4, 4), np.uint8)
-    for i in range(0, numberOfIterations, jump):
-        plt.imshow(cv2.dilate(image, kernel, iterations=i))
-        fig.savefig(str(i) + ".pdf")
+    ''' ~~~ displaying image with matplotlib
+    opencv represents rgb images as nd-array, but in reverse order (they are bgr instead of rgb)
+    we have to convert them back to rgb using COLOR_BGR2RGB function
+    '''
+    #plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.imshow(inv)
+    #plt.show()
+    fig.savefig(str(x) + ".pdf")
 
 def main():
-    airplanes = []
     airplanes = collectImages("samolot", 20)
-    tmpMedian = median(airplanes[0], disk(5))
-    print(tmpMedian)
 
-    #first I apply bilateral filter to smooth the texture and retain sharp edges
-    #tryBilateral(airplanes[0], 200, 25)        #found good parameter -> 170
-    airplanes[0] = cv2.bilateralFilter(airplanes[0], 9, 170, 170)
-
-    #canny algorithm is used to detect edges on the images
-    #tryCanny(airplanes[0], 200, 25)            #found good parameter -> 100
-    airplanes[0] = cv2.Canny(airplanes[0], 100, 100)
-
-    #kernel = np.ones((4, 4), np.uint8)
-
-    #tryErode(airplanes[0], 7, 1)
-
-    #tryDilate(airplanes[0], 7, 1)
-
-    #fig = plt.figure()
-
-    #plt.imshow(cv2.erode(airplanes[0], kernel, iterations=0))
-    #fig.savefig("0.pdf")
-    #plt.show()
-
+    for i in range(0, 20):
+        drawPictureWithContour(airplanes[i], i)
 
 main()

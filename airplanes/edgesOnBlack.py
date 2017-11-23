@@ -36,8 +36,10 @@ def collectImages(baseName, lastNumber):
     return images
 
 
+
 def drawPictureWithContour(image, x):
-    fig = plt.figure()
+    #fig = plt.figure()
+    
     #rescale exposure
     min = np.percentile(image, 5)
     perc = np.percentile(image, qthPercentile)
@@ -61,30 +63,36 @@ def drawPictureWithContour(image, x):
             inv[i][j] = 1 - img[i][j][2]
 
     #time to smooth the results
-    inv = gaussian(inv, sigma=0.8)
+    #inv = gaussian(inv, sigma=0.8)
 
     #erosion and dilatation to patch up objects on the sky
     inv = cv2.erode(inv,kernel,iterations = 1)
-    inv = cv2.dilate(inv,kernel,iterations = 2)
+    inv = cv2.dilate(inv,kernel,iterations = 3)
+    inv = cv2.erode(inv,kernel,iterations = 1)
 
     #actual contour finding
     contours = measure.find_contours(inv, contourLevelValue)
     for n, contours in enumerate(contours):
+        M = cv2.moments(c)
+        centerX = int(M["m10"] / M["m00"])
+        centerY = int(M["m01"] / M["m00"])
         plt.plot(contours[:,1],contours[:,0],linewidth=contourWidth, color=rcg(myColors))
+
+
 
     ''' ~~~ displaying image with matplotlib
     opencv represents rgb images as nd-array, but in reverse order (they are bgr instead of rgb)
     we have to convert them back to rgb using COLOR_BGR2RGB function
     '''
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    #plt.imshow(image)
+    #plt.imshow(inv)
     #plt.show()
     fig.savefig(str(x) + ".pdf")
 
 def main():
     airplanes = collectImages("samolot", 20)
 
-    for i in range(0, 20):
+    for i in range(0, 5):
         drawPictureWithContour(airplanes[i], i)
 
 main()

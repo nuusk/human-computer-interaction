@@ -39,7 +39,8 @@ def collectImages(baseName, lastNumber):
 
 def drawPictureWithContour(image, x):
     #fig = plt.figure()
-    
+    fig, ax = plt.subplots()
+
     #rescale exposure
     min = np.percentile(image, 5)
     perc = np.percentile(image, qthPercentile)
@@ -73,9 +74,12 @@ def drawPictureWithContour(image, x):
     #actual contour finding
     contours = measure.find_contours(inv, contourLevelValue)
     for n, contours in enumerate(contours):
-        M = cv2.moments(c)
-        centerX = int(M["m10"] / M["m00"])
-        centerY = int(M["m01"] / M["m00"])
+        M = measure.moments_central(contours, 0, 0)
+        centerX = int(M[1,0] / M[0,0])
+        centerY = int(M[0,1] / M[0,0])
+        print("centerX: " + str(centerX))
+        print("centerY: " + str(centerY))
+        ax.add_artist(plt.Circle((centerX, centerY), 5, color='w'))
         plt.plot(contours[:,1],contours[:,0],linewidth=contourWidth, color=rcg(myColors))
 
 
@@ -90,9 +94,9 @@ def drawPictureWithContour(image, x):
     fig.savefig(str(x) + ".pdf")
 
 def main():
-    airplanes = collectImages("samolot", 20)
+    airplanes = collectImages("samolot", 18at)
 
-    for i in range(0, 5):
+    for i in range(0, 20):
         drawPictureWithContour(airplanes[i], i)
 
 main()
